@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = "com.assignment.survey.repository.mongo")
-@EnableJpaRepositories(basePackages = "com.assignment.survey.repository.jpa")
+@EnableMongoRepositories(basePackages = "com.survey.repository.mongo")
+@EnableJpaRepositories(basePackages = "com.survey.repository.jpa")
 public class SurveyApplication {
 
 	public static void main(String[] args) {

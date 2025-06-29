@@ -33,9 +33,9 @@ public class SurveyController {
     }
 
     @Operation(summary = "Fetch question", description = "for get question from db")
-    @PostMapping()
+    @GetMapping()
     public ResponseEntity<List<SurveyQuestion>> fetchSurveyQuestion(
-            @RequestParam() String seq) throws CommonException {
+            @RequestParam(value ="seq", defaultValue = "0001") String seq) throws CommonException {
         return ResponseEntity.ok(surveyService.getSurveyQuestion(seq));
     }
 
