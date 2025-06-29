@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.assignment.survey.SurveyApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-06-29T09:02:25.475Z" hostname="TMBADS-MASTERs-MacBook-Pro.local" time="0.483">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.assignment.survey.SurveyApplicationTests" time="0.483"/>
+  <system-out><![CDATA[16:02:20.292 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.assignment.survey.SurveyApplicationTests]: SurveyApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:02:20.434 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.assignment.survey.SurveyApplication for test class com.assignment.survey.SurveyApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.7)
+
+2025-06-29T16:02:20.855+07:00  INFO 96193 --- [survey application] [    Test worker] c.a.survey.SurveyApplicationTests        : Starting SurveyApplicationTests using Java 17.0.14 with PID 96193 (started by user in /Users/user/Downloads/survey-service)
+2025-06-29T16:02:20.856+07:00  INFO 96193 --- [survey application] [    Test worker] c.a.survey.SurveyApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2025-06-29T16:02:21.482+07:00  INFO 96193 --- [survey application] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-29T16:02:21.483+07:00  INFO 96193 --- [survey application] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2025-06-29T16:02:21.515+07:00  INFO 96193 --- [survey application] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 26 ms. Found 1 MongoDB repository interface.
+2025-06-29T16:02:21.519+07:00  INFO 96193 --- [survey application] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-29T16:02:21.519+07:00  INFO 96193 --- [survey application] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-29T16:02:21.534+07:00  INFO 96193 --- [survey application] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10 ms. Found 1 JPA repository interface.
+2025-06-29T16:02:22.227+07:00  INFO 96193 --- [survey application] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-06-29T16:02:22.563+07:00  INFO 96193 --- [survey application] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-06-29T16:02:22.564+07:00  INFO 96193 --- [survey application] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-06-29T16:02:22.682+07:00  INFO 96193 --- [survey application] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-29T16:02:22.749+07:00  INFO 96193 --- [survey application] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-06-29T16:02:22.788+07:00  INFO 96193 --- [survey application] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-06-29T16:02:23.100+07:00  INFO 96193 --- [survey application] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-29T16:02:23.189+07:00  INFO 96193 --- [survey application] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-29T16:02:23.974+07:00  INFO 96193 --- [survey application] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-29T16:02:23.976+07:00  INFO 96193 --- [survey application] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-29T16:02:24.165+07:00  INFO 96193 --- [survey application] [    Test worker] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "5.2.1"}, "os": {"type": "Darwin", "name": "Mac OS X", "architecture": "aarch64", "version": "15.5"}, "platform": "Java/Amazon.com Inc./17.0.14+7-LTS"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=null, commandListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsCommandListener@2c3b3163], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@3da8e5db, com.mongodb.Jep395RecordCodecProvider@4f08d3d6, com.mongodb.KotlinCodecProvider@510b698f]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsConnectionPoolListener@79813f03], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null, timeoutMS=null}
+2025-06-29T16:02:24.167+07:00  INFO 96193 --- [survey application] [localhost:27017] org.mongodb.driver.cluster               : Exception in monitor thread while connecting to server localhost:27017
+
+com.mongodb.MongoSocketOpenException: Exception opening socket
+	at com.mongodb.internal.connection.SocketStream.lambda$open$0(SocketStream.java:85) ~[mongodb-driver-core-5.2.1.jar:na]
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403) ~[na:na]
+	at com.mongodb.internal.connection.SocketStream.open(SocketStream.java:85) ~[mongodb-driver-core-5.2.1.jar:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.open(InternalStreamConnection.java:233) ~[mongodb-driver-core-5.2.1.jar:na]
+	at com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitor.lookupServerDescription(DefaultServerMonitor.java:219) ~[mongodb-driver-core-5.2.1.jar:na]
+	at com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitor.run(DefaultServerMonitor.java:176) ~[mongodb-driver-core-5.2.1.jar:na]
+Caused by: java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method) ~[na:na]
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672) ~[na:na]
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554) ~[na:na]
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602) ~[na:na]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[na:na]
+	at java.base/java.net.Socket.connect(Socket.java:633) ~[na:na]
+	at com.mongodb.internal.connection.SocketStreamHelper.initialize(SocketStreamHelper.java:76) ~[mongodb-driver-core-5.2.1.jar:na]
+	at com.mongodb.internal.connection.SocketStream.initializeSocket(SocketStream.java:104) ~[mongodb-driver-core-5.2.1.jar:na]
+	at com.mongodb.internal.connection.SocketStream.open(SocketStream.java:79) ~[mongodb-driver-core-5.2.1.jar:na]
+	... 3 common frames omitted
+
+2025-06-29T16:02:24.545+07:00  INFO 96193 --- [survey application] [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-29T16:02:25.372+07:00  INFO 96193 --- [survey application] [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2025-06-29T16:02:25.387+07:00  INFO 96193 --- [survey application] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 14 endpoints beneath base path '/actuator'
+2025-06-29T16:02:25.444+07:00  INFO 96193 --- [survey application] [    Test worker] c.a.survey.SurveyApplicationTests        : Started SurveyApplicationTests in 4.864 seconds (process running for 6.018)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

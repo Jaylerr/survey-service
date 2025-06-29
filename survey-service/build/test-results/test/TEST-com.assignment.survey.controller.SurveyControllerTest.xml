@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.assignment.survey.controller.SurveyControllerTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-06-29T09:02:26.075Z" hostname="TMBADS-MASTERs-MacBook-Pro.local" time="0.034">
+  <properties/>
+  <testcase name="getResponseSuccessTest()" classname="com.assignment.survey.controller.SurveyControllerTest" time="0.027"/>
+  <testcase name="fetchQuestionSuccessTest()" classname="com.assignment.survey.controller.SurveyControllerTest" time="0.003"/>
+  <testcase name="submitResponseSuccessTest()" classname="com.assignment.survey.controller.SurveyControllerTest" time="0.002"/>
+  <system-out><![CDATA[2025-06-29T16:02:25.972+07:00  INFO 96193 --- [survey application] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.assignment.survey.controller.SurveyControllerTest]: SurveyControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
