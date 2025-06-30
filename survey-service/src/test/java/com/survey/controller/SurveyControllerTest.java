@@ -48,7 +48,7 @@ class SurveyControllerTest {
         ResponseEntity<List<SurveyQuestion>> actual = controller.fetchSurveyQuestion("0001");
 
         Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
-        Assertions.assertTrue(!actual.getBody().isEmpty());
+        Assertions.assertFalse(actual.getBody().isEmpty());
     }
 
     @Test
@@ -65,19 +65,23 @@ class SurveyControllerTest {
 
     @Test
     void getResponseBySeqSuccessTest() throws CommonException {
-        Mockito.when(service.getSurveyResponseBySeq("seq")).thenReturn(null);
+        SurveyResponseSummary responseBySeq = new SurveyResponseSummary();
+        Mockito.when(service.getSurveyResponseBySeq("seq")).thenReturn(responseBySeq);
 
         ResponseEntity<SurveyResponseSummary> actual = controller.getResponseBySeq("seq");
 
         Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
+        Assertions.assertNotNull(actual.getBody());
     }
 
     @Test
     void getResponseByRespondentIdSuccessTest() throws CommonException {
-        Mockito.when(service.getSurveyResponseByRespondentId("1112")).thenReturn(null);
+        List<SurveyResponse> responseByRespondentId = List.of(new SurveyResponse());
+        Mockito.when(service.getSurveyResponseByRespondentId("1112")).thenReturn(responseByRespondentId);
 
         ResponseEntity<List<SurveyResponse>> actual = controller.getResponseByRespondentId("1112");
 
         Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
+        Assertions.assertFalse(actual.getBody().isEmpty());
     }
 }

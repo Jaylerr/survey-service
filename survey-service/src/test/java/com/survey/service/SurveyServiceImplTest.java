@@ -57,7 +57,7 @@ class SurveyServiceImplTest {
     }
 
     @Test
-    void getSurveyQuestionFailShouldThrowCommonErrorTest() {
+    void getSurveyQuestionFailShouldThrowCommonExceptionTest() {
         Mockito.when(surveyQuestionRepository.findBySeq("0001")).thenThrow(MongoClientException.class);
 
         Assertions.assertThrows(CommonException.class, () -> service.getSurveyQuestion("0001"));
@@ -84,7 +84,7 @@ class SurveyServiceImplTest {
     }
 
     @Test
-    void saveSurveyQuestionsFailTest(){
+    void saveSurveyQuestionsFailShouldThrowCommonExceptionTest(){
         SurveyQuestion question = new SurveyQuestion();
         question.setSeq("0001");
 
@@ -121,11 +121,11 @@ class SurveyServiceImplTest {
         String actual = service.saveResponses(surveyResponseRequestBody);
 
         Mockito.verify(surveyResponseRepository, Mockito.atLeast(2)).save(any());
-        Assertions.assertEquals("submit response for respondent id 1150 success", actual);
+        Assertions.assertEquals("submit response success for respondent id 1150", actual);
     }
 
     @Test
-    void saveResponsesFailTest() {
+    void saveResponsesFailShouldThrowCommonExceptionTest() {
         SurveyAnswer answerSeq1 = new SurveyAnswer();
         answerSeq1.setSeq("0001");
         answerSeq1.setQuestion("title 1");
@@ -173,21 +173,6 @@ class SurveyServiceImplTest {
 
     @Test
     void getSurveyResponseBySeqWhenNotExistsSeqTest() throws CommonException {
-        SurveyResponseWithCount response = new SurveyResponseWithCount();
-        response.setSeq("0001");
-        response.setQuestion("title1");
-        response.setAnswer("1");
-        response.setCount(5L);
-
-        SurveyResponseWithCount response2 = new SurveyResponseWithCount();
-        response2.setSeq("0001");
-        response2.setQuestion("title1");
-        response2.setAnswer("2");
-        response2.setCount(6L);
-
-        List<SurveyResponseWithCount> surveyResponseWithCount = new ArrayList<>();
-        surveyResponseWithCount.add(response);
-        surveyResponseWithCount.add(response2);
 
         Mockito.when(surveyResponseRepository.countGroupedBySeqAndAnswer()).thenReturn(new ArrayList<>());
 
@@ -198,7 +183,7 @@ class SurveyServiceImplTest {
     }
 
     @Test
-    void getSurveyResponseBySeqWhenGetMongoExceptionTest() {
+    void getSurveyResponseBySeqWhenGetMongoExceptionShouldThrowCommonExceptionTest() {
         MongoClientException ex = new MongoClientException("timeout");
         Mockito.when(surveyResponseRepository.countGroupedBySeqAndAnswer()).thenThrow(ex);
 
@@ -228,7 +213,7 @@ class SurveyServiceImplTest {
     }
 
     @Test
-    void getSurveyResponseByRespondentIdWhenGetMongoExceptionTest() {
+    void getSurveyResponseByRespondentIdWhenGetMongoExceptionShouldThrowCommonExceptionTest() {
         MongoClientException ex = new MongoClientException("timeout");
         Mockito.when(surveyResponseRepository.findByRespondentId(1)).thenThrow(ex);
 

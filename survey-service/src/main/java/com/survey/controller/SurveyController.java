@@ -33,18 +33,18 @@ public class SurveyController {
         this.surveyService = surveyService;
     }
 
-    @Operation(summary = "Add new question", description = "for save question to db")
-    @PostMapping(value = "/add-questions")
-    public ResponseEntity<String> addNewQuestions(
-            @Valid @RequestBody QuestionsRequestBody request) throws CommonException {
-        return ResponseEntity.ok(surveyService.saveSurveyQuestions(request));
-    }
-
     @Operation(summary = "Fetch question", description = "for get question from db")
     @GetMapping()
     public ResponseEntity<List<SurveyQuestion>> fetchSurveyQuestion(
             @RequestParam(value ="seq") @NotBlank String seq) throws CommonException {
         return ResponseEntity.ok(surveyService.getSurveyQuestion(seq));
+    }
+
+    @Operation(summary = "Add new question", description = "for save question to db")
+    @PostMapping(value = "/add-questions")
+    public ResponseEntity<String> addNewQuestions(
+            @Valid @RequestBody QuestionsRequestBody request) throws CommonException {
+        return ResponseEntity.ok(surveyService.saveSurveyQuestions(request));
     }
 
     @Operation(summary = "Submit response", description = "for save response to db")
