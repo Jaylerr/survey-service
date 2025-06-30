@@ -1,9 +1,11 @@
 package com.survey.controller;
 
 import com.survey.exception.model.CommonException;
-import com.survey.model.SurveyResponseSummary;
+import com.survey.model.surveyquestion.QuestionsRequestBody;
+import com.survey.model.surveyresponse.SurveyResponseSummary;
 import com.survey.model.surveyquestion.SurveyQuestion;
-import com.survey.model.surveyresponse.SurveyResponseBody;
+import com.survey.model.surveyresponse.SurveyResponse;
+import com.survey.model.surveyresponse.SurveyResponseRequestBody;
 import com.survey.service.SurveyService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,17 @@ class SurveyControllerTest {
     SurveyService service;
 
     @Test
+    void addQuestionSuccessTest() throws CommonException {
+        QuestionsRequestBody request = new QuestionsRequestBody();
+        Mockito.when(service.saveSurveyQuestions(request)).thenReturn("added question success");
+
+        ResponseEntity<String> actual = controller.addNewQuestions(request);
+
+        Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
+        Assertions.assertEquals("added question success", actual.getBody());
+    }
+
+    @Test
     void fetchQuestionSuccessTest() throws CommonException {
         SurveyQuestion question = new SurveyQuestion();
         List<SurveyQuestion> questions = List.of(question);
@@ -40,21 +53,30 @@ class SurveyControllerTest {
 
     @Test
     void submitResponseSuccessTest() throws CommonException {
-        SurveyResponseBody response = new SurveyResponseBody();
+        SurveyResponseRequestBody response = new SurveyResponseRequestBody();
         response.setSurveyAnswer(new ArrayList<>());
         Mockito.when(service.saveResponses(response)).thenReturn("success");
 
         ResponseEntity<String> actual = controller.submitResponse(response);
 
         Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
-        Assertions.assertTrue(actual.getBody().equals("success"));
+        Assertions.assertEquals("success", actual.getBody());
     }
 
     @Test
-    void getResponseSuccessTest() throws CommonException {
+    void getResponseBySeqSuccessTest() throws CommonException {
         Mockito.when(service.getSurveyResponseBySeq("seq")).thenReturn(null);
 
         ResponseEntity<SurveyResponseSummary> actual = controller.getResponseBySeq("seq");
+
+        Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test
+    void getResponseByRespondentIdSuccessTest() throws CommonException {
+        Mockito.when(service.getSurveyResponseByRespondentId("1112")).thenReturn(null);
+
+        ResponseEntity<List<SurveyResponse>> actual = controller.getResponseByRespondentId("1112");
 
         Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
     }

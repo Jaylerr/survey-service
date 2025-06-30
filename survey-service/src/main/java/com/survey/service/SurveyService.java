@@ -1,11 +1,11 @@
 package com.survey.service;
 
 import com.survey.exception.model.CommonException;
-import com.survey.model.QuestionsRequest;
+import com.survey.model.surveyquestion.QuestionsRequestBody;
 import com.survey.model.surveyquestion.SurveyQuestion;
-import com.survey.model.surveyresponse.SurveyResponseBody;
-import com.survey.model.SurveyResponseSummary;
-import com.survey.model.surveyresponse.SurveyResponseEntity;
+import com.survey.model.surveyresponse.SurveyResponse;
+import com.survey.model.surveyresponse.SurveyResponseRequestBody;
+import com.survey.model.surveyresponse.SurveyResponseSummary;
 
 import java.util.List;
 
@@ -13,12 +13,12 @@ public interface SurveyService {
 
     List<SurveyQuestion> getSurveyQuestion(String seq) throws CommonException;
 
-    String saveSurveyQuestions(QuestionsRequest request) throws CommonException;
+    String saveSurveyQuestions(QuestionsRequestBody request) throws CommonException;
 
-    String saveResponses(SurveyResponseBody surveyResponse) throws CommonException;
+    String saveResponses(SurveyResponseRequestBody surveyResponse) throws CommonException;
 
     SurveyResponseSummary getSurveyResponseBySeq(String seq) throws CommonException;
 
-    List<SurveyResponseEntity> getSurveyResponseByRespondentId(String respId) throws CommonException;
+    List<SurveyResponse> getSurveyResponseByRespondentId(String respId) throws CommonException;
 
 }

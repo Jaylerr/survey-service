@@ -1,16 +1,16 @@
 package com.survey.service;
 
+import com.mongodb.MongoClientException;
 import com.survey.exception.model.CommonException;
-import com.survey.model.QuestionsRequest;
-import com.survey.model.SurveyResponseSummary;
-import com.survey.model.SurveyResponseWithCount;
+import com.survey.model.surveyquestion.QuestionsRequestBody;
 import com.survey.model.surveyquestion.SurveyQuestion;
 import com.survey.model.surveyresponse.SurveyAnswer;
-import com.survey.model.surveyresponse.SurveyResponseBody;
-import com.survey.model.surveyresponse.SurveyResponseEntity;
+import com.survey.model.surveyresponse.SurveyResponse;
+import com.survey.model.surveyresponse.SurveyResponseRequestBody;
+import com.survey.model.surveyresponse.SurveyResponseSummary;
+import com.survey.model.surveyresponse.SurveyResponseWithCount;
 import com.survey.repository.jpa.SurveyResponseRepository;
 import com.survey.repository.mongo.SurveyQuestionRepository;
-import com.mongodb.MongoClientException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,28 +44,17 @@ class SurveyServiceImplTest {
 
         List<SurveyQuestion> actual = service.getSurveyQuestion("0001");
 
-        Assertions.assertTrue(actual.size() == 1);
+        Assertions.assertEquals(1, actual.size());
     }
 
     @Test
-    void getSurveyQuestionWithNoSeqSuccessTest() throws CommonException {
-        List<SurveyQuestion> surveys = new ArrayList<>();
-        surveys.add(new SurveyQuestion());
-        surveys.add(new SurveyQuestion());
-        Mockito.when(surveyQuestionRepository.findAll()).thenReturn(surveys);
-
-        List<SurveyQuestion> actual = service.getSurveyQuestion("");
-
-        Assertions.assertTrue(actual.size() > 1);
-    }
-
-    @Test
-    void getSurveyQuestionWithNotExistingSeqShouldReturnEmptyListTest() throws CommonException {
+    void getSurveyQuestionWithNotExistingSeqShouldReturnEmptyListTest() {
         Mockito.when(surveyQuestionRepository.findBySeq("0001")).thenReturn(null);
 
-        List<SurveyQuestion> actual = service.getSurveyQuestion("0001");
+        CommonException actual = Assertions.assertThrows(CommonException.class, () -> service.getSurveyQuestion("0001"));
 
-        Assertions.assertTrue(actual.isEmpty());
+        Assertions.assertTrue(actual.getStatus().is2xxSuccessful());
+        Assertions.assertEquals("requested seq is not exist in db", actual.getMessage());
     }
 
     @Test
@@ -84,7 +73,7 @@ class SurveyServiceImplTest {
         List<SurveyQuestion> questions = new ArrayList<>();
         questions.add(question);
 
-        QuestionsRequest request = new QuestionsRequest();
+        QuestionsRequestBody request = new QuestionsRequestBody();
         request.setQuestions(questions);
 
         Mockito.when(surveyQuestionRepository.existsBySeq("0001")).thenReturn(true);
@@ -103,7 +92,7 @@ class SurveyServiceImplTest {
         List<SurveyQuestion> questions = new ArrayList<>();
         questions.add(question);
 
-        QuestionsRequest request = new QuestionsRequest();
+        QuestionsRequestBody request = new QuestionsRequestBody();
         request.setQuestions(questions);
 
         Mockito.when(surveyQuestionRepository.existsBySeq("0001")).thenReturn(false);
@@ -115,14 +104,14 @@ class SurveyServiceImplTest {
     }
 
     @Test
-    void saveSurveyQuestionsFailWhenDatabaseDownTest() throws CommonException {
+    void saveSurveyQuestionsFailWhenDatabaseDownTest(){
         SurveyQuestion question = new SurveyQuestion();
         question.setSeq("0001");
 
         List<SurveyQuestion> questions = new ArrayList<>();
         questions.add(question);
 
-        QuestionsRequest request = new QuestionsRequest();
+        QuestionsRequestBody request = new QuestionsRequestBody();
         request.setQuestions(questions);
 
         Mockito.when(surveyQuestionRepository.existsBySeq("0001")).thenThrow(MongoClientException.class);
@@ -143,16 +132,16 @@ class SurveyServiceImplTest {
         answerSeq2.setQuestion("title 2");
         answerSeq2.setAnswer("answer 2");
 
-        SurveyResponseBody surveyResponseBody = new SurveyResponseBody();
-        surveyResponseBody.setRespondentId(1150);
-        surveyResponseBody.setSurveyAnswer(List.of(answerSeq1, answerSeq2));
+        SurveyResponseRequestBody surveyResponseRequestBody = new SurveyResponseRequestBody();
+        surveyResponseRequestBody.setRespondentId(1150);
+        surveyResponseRequestBody.setSurveyAnswer(List.of(answerSeq1, answerSeq2));
 
         Mockito.when(surveyResponseRepository.existsByRespondentId(1150)).thenReturn(true);
 
-        String actual = service.saveResponses(surveyResponseBody);
+        String actual = service.saveResponses(surveyResponseRequestBody);
 
         Mockito.verify(surveyResponseRepository, Mockito.atLeast(2)).save(any());
-        Assertions.assertEquals("submit response success", actual);
+        Assertions.assertEquals("submit response for respondent id 1150 success", actual);
     }
 
     @Test
@@ -167,18 +156,18 @@ class SurveyServiceImplTest {
         answerSeq2.setQuestion("title 2");
         answerSeq2.setAnswer("answer 2");
 
-        SurveyResponseBody surveyResponseBody = new SurveyResponseBody();
-        surveyResponseBody.setRespondentId(1150);
-        surveyResponseBody.setSurveyAnswer(List.of(answerSeq1, answerSeq2));
+        SurveyResponseRequestBody surveyResponseRequestBody = new SurveyResponseRequestBody();
+        surveyResponseRequestBody.setRespondentId(1150);
+        surveyResponseRequestBody.setSurveyAnswer(List.of(answerSeq1, answerSeq2));
 
         Mockito.when(surveyResponseRepository.existsByRespondentId(1150)).thenReturn(false);
-        String actual = service.saveResponses(surveyResponseBody);
+        String actual = service.saveResponses(surveyResponseRequestBody);
 
-        Assertions.assertEquals("submit response fail", actual);
+        Assertions.assertEquals("submit response for respondent id 1150 not success", actual);
     }
 
     @Test
-    void saveResponsesFailWhenDatabaseDownTest() throws CommonException {
+    void saveResponsesFailWhenDatabaseDownTest() {
         SurveyAnswer answerSeq1 = new SurveyAnswer();
         answerSeq1.setSeq("0001");
         answerSeq1.setQuestion("title 1");
@@ -189,13 +178,13 @@ class SurveyServiceImplTest {
         answerSeq2.setQuestion("title 2");
         answerSeq2.setAnswer("answer 2");
 
-        SurveyResponseBody surveyResponseBody = new SurveyResponseBody();
-        surveyResponseBody.setRespondentId(1150);
-        surveyResponseBody.setSurveyAnswer(List.of(answerSeq1, answerSeq2));
+        SurveyResponseRequestBody surveyResponseRequestBody = new SurveyResponseRequestBody();
+        surveyResponseRequestBody.setRespondentId(1150);
+        surveyResponseRequestBody.setSurveyAnswer(List.of(answerSeq1, answerSeq2));
 
         Mockito.doThrow(MongoClientException.class).when(surveyResponseRepository).save(any());
 
-        Assertions.assertThrows(CommonException.class, () -> service.saveResponses(surveyResponseBody));
+        Assertions.assertThrows(CommonException.class, () -> service.saveResponses(surveyResponseRequestBody));
     }
 
     @Test
@@ -220,8 +209,8 @@ class SurveyServiceImplTest {
 
         SurveyResponseSummary actual = service.getSurveyResponseBySeq("0001");
 
-        Assertions.assertTrue(actual.getAnswerCounts().get(0).getCount() == 5);
-        Assertions.assertTrue(actual.getAnswerCounts().get(1).getCount() == 6);
+        Assertions.assertEquals(5, actual.getAnswerCounts().get(0).getCount());
+        Assertions.assertEquals(6, actual.getAnswerCounts().get(1).getCount());
     }
 
     @Test
@@ -251,7 +240,7 @@ class SurveyServiceImplTest {
     }
 
     @Test
-    void getSurveyResponseBySeqWhenGetMongoExceptionTest() throws CommonException {
+    void getSurveyResponseBySeqWhenGetMongoExceptionTest() {
         MongoClientException ex = new MongoClientException("timeout");
         Mockito.when(surveyResponseRepository.countGroupedBySeqAndAnswer()).thenThrow(ex);
 
@@ -260,33 +249,31 @@ class SurveyServiceImplTest {
 
     @Test
     void getSurveyResponseByRespondentIdSuccessTest() throws CommonException {
-        SurveyResponseEntity surveyResponse = new SurveyResponseEntity();
+        SurveyResponse surveyResponse = new SurveyResponse();
         surveyResponse.setRespondentId(1150);
         surveyResponse.setQuestion("title 1");
         surveyResponse.setAnswer("answer 1");
         surveyResponse.setSeq("0001");
 
-        SurveyResponseEntity surveyResponse2 = new SurveyResponseEntity();
+        SurveyResponse surveyResponse2 = new SurveyResponse();
         surveyResponse2.setRespondentId(1150);
         surveyResponse2.setQuestion("title 2");
         surveyResponse2.setAnswer("answer 2");
         surveyResponse2.setSeq("0002");
-        List<SurveyResponseEntity> response = List.of(surveyResponse);
+        List<SurveyResponse> response = List.of(surveyResponse, surveyResponse2);
 
         Mockito.when(surveyResponseRepository.findByRespondentId(1150)).thenReturn(response);
 
-        List<SurveyResponseEntity> actual = service.getSurveyResponseByRespondentId("1150");
+        List<SurveyResponse> actual = service.getSurveyResponseByRespondentId("1150");
 
         Assertions.assertTrue(!actual.isEmpty());
-
     }
 
     @Test
-    void getSurveyResponseByRespondentIdWhenGetMongoExceptionTest() throws CommonException {
+    void getSurveyResponseByRespondentIdWhenGetMongoExceptionTest() {
         MongoClientException ex = new MongoClientException("timeout");
         Mockito.when(surveyResponseRepository.findByRespondentId(1)).thenThrow(ex);
 
         Assertions.assertThrows(CommonException.class, () -> service.getSurveyResponseByRespondentId("1"));
-
     }
 }

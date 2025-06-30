@@ -1,18 +1,17 @@
-package com.survey.model;
+package com.survey.model.surveyresponse;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class SurveyResponseSummary {
+public class SurveyResponse {
+    private Integer respondentId;
     private String seq;
     private String question;
-    private String message;
-    private List<AnswerCount> answerCounts;
+    private String answer;
+    private LocalDateTime createdAt;
 }

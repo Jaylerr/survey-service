@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class SurveyResponseBody {
+public class SurveyResponseRequestBody {
     @NotNull(message = "respondentId is required")
     private Integer respondentId;
 

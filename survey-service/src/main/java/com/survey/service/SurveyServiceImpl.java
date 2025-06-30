@@ -1,18 +1,18 @@
 package com.survey.service;
 
 import com.survey.exception.model.CommonException;
-import com.survey.model.AnswerCount;
-import com.survey.model.QuestionsRequest;
-import com.survey.model.SurveyResponseSummary;
-import com.survey.model.SurveyResponseWithCount;
+import com.survey.model.surveyresponse.AnswerCount;
+import com.survey.model.surveyquestion.QuestionsRequestBody;
+import com.survey.model.surveyresponse.SurveyResponseSummary;
+import com.survey.model.surveyresponse.SurveyResponseWithCount;
 import com.survey.model.surveyquestion.SurveyQuestion;
 import com.survey.model.surveyresponse.SurveyAnswer;
-import com.survey.model.surveyresponse.SurveyResponseBody;
+import com.survey.model.surveyresponse.SurveyResponse;
+import com.survey.model.surveyresponse.SurveyResponseRequestBody;
 import com.survey.model.surveyresponse.SurveyResponseEntity;
 import com.survey.repository.jpa.SurveyResponseRepository;
 import com.survey.repository.mongo.SurveyQuestionRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.h2.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -34,25 +34,24 @@ public class SurveyServiceImpl implements SurveyService {
     @Override
     public List<SurveyQuestion> getSurveyQuestion(String seq) throws CommonException {
         try {
-            if (StringUtils.isNullOrEmpty(seq)) {
-                return surveyQuestionRepository.findAll();
-            }
-
             SurveyQuestion question = surveyQuestionRepository.findBySeq(seq);
-            if (question != null) {
-                return Collections.singletonList(question);
+            if (question == null) {
+                log.info("seq {} is not exist in db", seq);
+                throw new CommonException(HttpStatus.OK, "failed", "requested seq is not exist in db");
             }
-            log.info("seq {} is not exist in db", seq);
-            return Collections.emptyList();
+            return Collections.singletonList(question);
 
         } catch (Exception e) {
+            if (e instanceof CommonException) {
+                throw e;
+            }
             log.error("fail to get data from mongo db", e);
             throw getCommonException("fail to fetch question");
         }
     }
 
     @Override
-    public String saveSurveyQuestions(QuestionsRequest request) throws CommonException {
+    public String saveSurveyQuestions(QuestionsRequestBody request) throws CommonException {
         try {
             List<SurveyQuestion> surveyQuestionList = request.getQuestions();
             surveyQuestionRepository.saveAll(surveyQuestionList);
@@ -69,7 +68,7 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public String saveResponses(SurveyResponseBody surveyResponse) throws CommonException {
+    public String saveResponses(SurveyResponseRequestBody surveyResponse) throws CommonException {
         List<SurveyAnswer> responseList = surveyResponse.getSurveyAnswer();
         Integer respondentId = surveyResponse.getRespondentId();
         try {
@@ -82,9 +81,9 @@ public class SurveyServiceImpl implements SurveyService {
                 surveyResponseRepository.save(resp);
             }
             if (!surveyResponseRepository.existsByRespondentId(respondentId)) {
-                return "submit response fail";
+                return String.format("submit response for respondent id %s not success", respondentId);
             }
-            return "submit response success";
+            return String.format("submit response for respondent id %s success", respondentId);
         } catch (Exception e) {
             log.error("fail to save data to db ", e);
             throw getCommonException("fail to save response to db");
@@ -130,7 +129,7 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public  List<SurveyResponseEntity> getSurveyResponseByRespondentId(String respId) throws CommonException {
+    public List<SurveyResponse> getSurveyResponseByRespondentId(String respId) throws CommonException {
         try {
             return surveyResponseRepository.findByRespondentId(Integer.valueOf(respId));
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-package com.survey.model;
+package com.survey.model.surveyresponse;
 
 import lombok.Data;
 

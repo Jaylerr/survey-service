@@ -1,7 +1,8 @@
 package com.survey.repository.jpa;
 
+import com.survey.model.surveyresponse.SurveyResponse;
 import com.survey.model.surveyresponse.SurveyResponseEntity;
-import com.survey.model.SurveyResponseWithCount;
+import com.survey.model.surveyresponse.SurveyResponseWithCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface SurveyResponseRepository extends JpaRepository<SurveyResponseEntity, String> {
-    List<SurveyResponseEntity> findByRespondentId(Integer respondentId);
+    List<SurveyResponse> findByRespondentId(Integer respondentId);
 
     boolean existsByRespondentId(Integer respondentId);
 
