@@ -1,0 +1,15 @@
+.gradle
+gradlew
+gradlew.bat
+.idea
+build
+/logs
+bin/*
+.vscode/*
+.classpath
+.settings/*
+.project
+mountebank/*.log
+local.gradle
+/lib
+.DS_Store

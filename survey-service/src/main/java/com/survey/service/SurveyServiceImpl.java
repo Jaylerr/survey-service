@@ -1,15 +1,15 @@
 package com.survey.service;
 
 import com.survey.exception.model.CommonException;
-import com.survey.model.surveyresponse.AnswerCount;
 import com.survey.model.surveyquestion.QuestionsRequestBody;
-import com.survey.model.surveyresponse.SurveyResponseSummary;
-import com.survey.model.surveyresponse.SurveyResponseWithCount;
 import com.survey.model.surveyquestion.SurveyQuestion;
+import com.survey.model.surveyresponse.AnswerCount;
 import com.survey.model.surveyresponse.SurveyAnswer;
 import com.survey.model.surveyresponse.SurveyResponse;
-import com.survey.model.surveyresponse.SurveyResponseRequestBody;
 import com.survey.model.surveyresponse.SurveyResponseEntity;
+import com.survey.model.surveyresponse.SurveyResponseRequestBody;
+import com.survey.model.surveyresponse.SurveyResponseSummary;
+import com.survey.model.surveyresponse.SurveyResponseWithCount;
 import com.survey.repository.jpa.SurveyResponseRepository;
 import com.survey.repository.mongo.SurveyQuestionRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class SurveyServiceImpl implements SurveyService {
             SurveyQuestion question = surveyQuestionRepository.findBySeq(seq);
             if (question == null) {
                 log.info("seq {} is not exist in db", seq);
-                throw new CommonException(HttpStatus.OK, "failed", "requested seq is not exist in db");
+                throw new CommonException(HttpStatus.NOT_FOUND, "failed", "requested seq is not exist in db");
             }
             return Collections.singletonList(question);
 
@@ -55,14 +55,9 @@ public class SurveyServiceImpl implements SurveyService {
         try {
             List<SurveyQuestion> surveyQuestionList = request.getQuestions();
             surveyQuestionRepository.saveAll(surveyQuestionList);
-            for (SurveyQuestion question : surveyQuestionList) {
-                if (!surveyQuestionRepository.existsBySeq(question.getSeq())) {
-                    return "added question fail";
-                }
-            }
             return "added question success";
         } catch (Exception e) {
-            log.error("fail to save data to mongo db", e);
+            log.error("added question fail", e);
             throw getCommonException("fail to save question to db");
         }
     }
@@ -72,6 +67,7 @@ public class SurveyServiceImpl implements SurveyService {
         List<SurveyAnswer> responseList = surveyResponse.getSurveyAnswer();
         Integer respondentId = surveyResponse.getRespondentId();
         try {
+            log.debug("start save for respondent id {}", respondentId);
             for (SurveyAnswer s : responseList) {
                 SurveyResponseEntity resp = new SurveyResponseEntity();
                 resp.setRespondentId(respondentId);
@@ -79,11 +75,9 @@ public class SurveyServiceImpl implements SurveyService {
                 resp.setQuestion(s.getQuestion());
                 resp.setAnswer(s.getAnswer());
                 surveyResponseRepository.save(resp);
+                log.debug("saved response for seq {}", s.getSeq());
             }
-            if (!surveyResponseRepository.existsByRespondentId(respondentId)) {
-                return String.format("submit response for respondent id %s not success", respondentId);
-            }
-            return String.format("submit response for respondent id %s success", respondentId);
+            return "submit response success for respondent id " + respondentId;
         } catch (Exception e) {
             log.error("fail to save data to db ", e);
             throw getCommonException("fail to save response to db");

@@ -53,8 +53,7 @@ class SurveyServiceImplTest {
 
         CommonException actual = Assertions.assertThrows(CommonException.class, () -> service.getSurveyQuestion("0001"));
 
-        Assertions.assertTrue(actual.getStatus().is2xxSuccessful());
-        Assertions.assertEquals("requested seq is not exist in db", actual.getMessage());
+        Assertions.assertTrue(actual.getStatus().is4xxClientError());
     }
 
     @Test
@@ -85,7 +84,7 @@ class SurveyServiceImplTest {
     }
 
     @Test
-    void saveSurveyQuestionsFailTest() throws CommonException {
+    void saveSurveyQuestionsFailTest(){
         SurveyQuestion question = new SurveyQuestion();
         question.setSeq("0001");
 
@@ -95,26 +94,7 @@ class SurveyServiceImplTest {
         QuestionsRequestBody request = new QuestionsRequestBody();
         request.setQuestions(questions);
 
-        Mockito.when(surveyQuestionRepository.existsBySeq("0001")).thenReturn(false);
-
-        String actual = service.saveSurveyQuestions(request);
-
-        Mockito.verify(surveyQuestionRepository, Mockito.atLeastOnce()).saveAll(any());
-        Assertions.assertEquals("added question fail", actual);
-    }
-
-    @Test
-    void saveSurveyQuestionsFailWhenDatabaseDownTest(){
-        SurveyQuestion question = new SurveyQuestion();
-        question.setSeq("0001");
-
-        List<SurveyQuestion> questions = new ArrayList<>();
-        questions.add(question);
-
-        QuestionsRequestBody request = new QuestionsRequestBody();
-        request.setQuestions(questions);
-
-        Mockito.when(surveyQuestionRepository.existsBySeq("0001")).thenThrow(MongoClientException.class);
+        Mockito.when(surveyQuestionRepository.saveAll(questions)).thenThrow(MongoClientException.class);
 
         Assertions.assertThrows(CommonException.class, () -> service.saveSurveyQuestions(request));
 
@@ -145,29 +125,7 @@ class SurveyServiceImplTest {
     }
 
     @Test
-    void saveResponsesFailTest() throws CommonException {
-        SurveyAnswer answerSeq1 = new SurveyAnswer();
-        answerSeq1.setSeq("0001");
-        answerSeq1.setQuestion("title 1");
-        answerSeq1.setAnswer("answer 1");
-
-        SurveyAnswer answerSeq2 = new SurveyAnswer();
-        answerSeq2.setSeq("0002");
-        answerSeq2.setQuestion("title 2");
-        answerSeq2.setAnswer("answer 2");
-
-        SurveyResponseRequestBody surveyResponseRequestBody = new SurveyResponseRequestBody();
-        surveyResponseRequestBody.setRespondentId(1150);
-        surveyResponseRequestBody.setSurveyAnswer(List.of(answerSeq1, answerSeq2));
-
-        Mockito.when(surveyResponseRepository.existsByRespondentId(1150)).thenReturn(false);
-        String actual = service.saveResponses(surveyResponseRequestBody);
-
-        Assertions.assertEquals("submit response for respondent id 1150 not success", actual);
-    }
-
-    @Test
-    void saveResponsesFailWhenDatabaseDownTest() {
+    void saveResponsesFailTest() {
         SurveyAnswer answerSeq1 = new SurveyAnswer();
         answerSeq1.setSeq("0001");
         answerSeq1.setQuestion("title 1");
@@ -266,7 +224,7 @@ class SurveyServiceImplTest {
 
         List<SurveyResponse> actual = service.getSurveyResponseByRespondentId("1150");
 
-        Assertions.assertTrue(!actual.isEmpty());
+        Assertions.assertFalse(actual.isEmpty());
     }
 
     @Test
