@@ -3,7 +3,7 @@ package com.survey.service;
 import com.survey.exception.model.CommonException;
 import com.survey.model.surveyquestion.QuestionsRequestBody;
 import com.survey.model.surveyquestion.SurveyQuestion;
-import com.survey.model.surveyresponse.SurveyResponse;
+import com.survey.model.surveyresponse.SurveyResponseEntity;
 import com.survey.model.surveyresponse.SurveyResponseRequestBody;
 import com.survey.model.surveyresponse.SurveyResponseSummary;
 
@@ -19,6 +19,6 @@ public interface SurveyService {
 
     SurveyResponseSummary getSurveyResponseBySeq(String seq) throws CommonException;
 
-    List<SurveyResponse> getSurveyResponseByRespondentId(String respId) throws CommonException;
+    List<SurveyResponseEntity> getSurveyResponseByRespondentId(String respId) throws CommonException;
 
 }

@@ -5,7 +5,6 @@ import com.survey.model.surveyquestion.QuestionsRequestBody;
 import com.survey.model.surveyquestion.SurveyQuestion;
 import com.survey.model.surveyresponse.AnswerCount;
 import com.survey.model.surveyresponse.SurveyAnswer;
-import com.survey.model.surveyresponse.SurveyResponse;
 import com.survey.model.surveyresponse.SurveyResponseEntity;
 import com.survey.model.surveyresponse.SurveyResponseRequestBody;
 import com.survey.model.surveyresponse.SurveyResponseSummary;
@@ -25,6 +24,8 @@ import java.util.List;
 public class SurveyServiceImpl implements SurveyService {
     private final SurveyQuestionRepository surveyQuestionRepository;
     private final SurveyResponseRepository surveyResponseRepository;
+
+    public static final String FAIL_TO_GET_DATA_FROM_DB = "fail to get data from db";
 
     public SurveyServiceImpl(SurveyQuestionRepository surveyQuestionRepository, SurveyResponseRepository responseRepository) {
         this.surveyQuestionRepository = surveyQuestionRepository;
@@ -67,7 +68,7 @@ public class SurveyServiceImpl implements SurveyService {
         List<SurveyAnswer> responseList = surveyResponse.getSurveyAnswer();
         Integer respondentId = surveyResponse.getRespondentId();
         try {
-            log.debug("start save for respondent id {}", respondentId);
+            log.info("start save for respondent id {}", respondentId);
             for (SurveyAnswer s : responseList) {
                 SurveyResponseEntity resp = new SurveyResponseEntity();
                 resp.setRespondentId(respondentId);
@@ -75,7 +76,7 @@ public class SurveyServiceImpl implements SurveyService {
                 resp.setQuestion(s.getQuestion());
                 resp.setAnswer(s.getAnswer());
                 surveyResponseRepository.save(resp);
-                log.debug("saved response for seq {}", s.getSeq());
+                log.info("saved response for seq {}", s.getSeq());
             }
             return "submit response success for respondent id " + respondentId;
         } catch (Exception e) {
@@ -91,7 +92,7 @@ public class SurveyServiceImpl implements SurveyService {
             responseList = surveyResponseRepository.countGroupedBySeqAndAnswer();
         } catch (Exception e) {
             log.error("fail to get data from db ", e);
-            throw getCommonException("fail to get data from db");
+            throw getCommonException(FAIL_TO_GET_DATA_FROM_DB);
         }
         if (responseList != null && !responseList.isEmpty()) {
             List<AnswerCount> answerCountsList = new ArrayList<>();
@@ -123,11 +124,19 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public List<SurveyResponse> getSurveyResponseByRespondentId(String respId) throws CommonException {
+    public List<SurveyResponseEntity> getSurveyResponseByRespondentId(String respId) throws CommonException {
         try {
-            return surveyResponseRepository.findByRespondentId(Integer.valueOf(respId));
+            List<SurveyResponseEntity> response = surveyResponseRepository.findByRespondentId(Integer.valueOf(respId));
+            if (response.isEmpty()) {
+                throw new CommonException(HttpStatus.NOT_FOUND, "failed", "requested respond id is not exist in db");
+            }
+            return response;
         } catch (Exception e) {
-            throw getCommonException("fail to get data from db");
+            if (e instanceof CommonException) {
+                throw e;
+            }
+            log.error(FAIL_TO_GET_DATA_FROM_DB, e);
+            throw getCommonException(FAIL_TO_GET_DATA_FROM_DB);
         }
     }
 

@@ -3,7 +3,7 @@ package com.survey.controller;
 import com.survey.exception.model.CommonException;
 import com.survey.model.surveyquestion.QuestionsRequestBody;
 import com.survey.model.surveyquestion.SurveyQuestion;
-import com.survey.model.surveyresponse.SurveyResponse;
+import com.survey.model.surveyresponse.SurveyResponseEntity;
 import com.survey.model.surveyresponse.SurveyResponseRequestBody;
 import com.survey.model.surveyresponse.SurveyResponseSummary;
 import com.survey.service.SurveyService;
@@ -63,7 +63,7 @@ public class SurveyController {
 
     @Operation(summary = "Get response summary", description = "for get and summarize response")
     @GetMapping(value = "/response/respondent-id/{respId}")
-    public ResponseEntity<List<SurveyResponse>> getResponseByRespondentId(
+    public ResponseEntity<List<SurveyResponseEntity>> getResponseByRespondentId(
             @PathVariable String respId) throws CommonException {
         return ResponseEntity.ok(surveyService.getSurveyResponseByRespondentId(respId));
     }

@@ -2,10 +2,11 @@ package com.survey.controller;
 
 import com.survey.exception.model.CommonException;
 import com.survey.model.surveyquestion.QuestionsRequestBody;
-import com.survey.model.surveyresponse.SurveyResponseSummary;
 import com.survey.model.surveyquestion.SurveyQuestion;
-import com.survey.model.surveyresponse.SurveyResponse;
+import com.survey.model.surveyresponse.AnswerCount;
+import com.survey.model.surveyresponse.SurveyResponseEntity;
 import com.survey.model.surveyresponse.SurveyResponseRequestBody;
+import com.survey.model.surveyresponse.SurveyResponseSummary;
 import com.survey.service.SurveyService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -42,13 +43,14 @@ class SurveyControllerTest {
     @Test
     void fetchQuestionSuccessTest() throws CommonException {
         SurveyQuestion question = new SurveyQuestion();
+        question.setSeq("00001");
         List<SurveyQuestion> questions = List.of(question);
         Mockito.when(service.getSurveyQuestion("0001")).thenReturn(questions);
 
         ResponseEntity<List<SurveyQuestion>> actual = controller.fetchSurveyQuestion("0001");
 
         Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
-        Assertions.assertFalse(actual.getBody().isEmpty());
+        Assertions.assertEquals("00001", actual.getBody().get(0).getSeq());
     }
 
     @Test
@@ -65,21 +67,28 @@ class SurveyControllerTest {
 
     @Test
     void getResponseBySeqSuccessTest() throws CommonException {
+        AnswerCount answerCount = new AnswerCount();
+        answerCount.setAnswer("1");
+        answerCount.setCount(1L);
+
         SurveyResponseSummary responseBySeq = new SurveyResponseSummary();
+        responseBySeq.setSeq("00001");
+        responseBySeq.setAnswerCounts(List.of(answerCount));
         Mockito.when(service.getSurveyResponseBySeq("seq")).thenReturn(responseBySeq);
 
         ResponseEntity<SurveyResponseSummary> actual = controller.getResponseBySeq("seq");
 
         Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
-        Assertions.assertNotNull(actual.getBody());
+        Assertions.assertEquals("00001",actual.getBody().getSeq());
+        Assertions.assertEquals("1",actual.getBody().getAnswerCounts().get(0).getAnswer());
     }
 
     @Test
     void getResponseByRespondentIdSuccessTest() throws CommonException {
-        List<SurveyResponse> responseByRespondentId = List.of(new SurveyResponse());
+        List<SurveyResponseEntity> responseByRespondentId = List.of(new SurveyResponseEntity());
         Mockito.when(service.getSurveyResponseByRespondentId("1112")).thenReturn(responseByRespondentId);
 
-        ResponseEntity<List<SurveyResponse>> actual = controller.getResponseByRespondentId("1112");
+        ResponseEntity<List<SurveyResponseEntity>> actual = controller.getResponseByRespondentId("1112");
 
         Assertions.assertTrue(actual.getStatusCode().is2xxSuccessful());
         Assertions.assertFalse(actual.getBody().isEmpty());

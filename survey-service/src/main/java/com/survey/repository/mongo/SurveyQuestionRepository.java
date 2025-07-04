@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SurveyQuestionRepository extends MongoRepository<SurveyQuestion, String> {
     SurveyQuestion findBySeq(String seq);
-    boolean existsBySeq(String seq);
 }
